@@ -1,6 +1,6 @@
 package com.epam.resource.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "resources")

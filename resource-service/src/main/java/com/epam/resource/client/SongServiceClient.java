@@ -1,6 +1,6 @@
 package com.epam.resource.client;
 
-import com.epam.song.domain.Song;
+import com.epam.resource.domain.Song;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;

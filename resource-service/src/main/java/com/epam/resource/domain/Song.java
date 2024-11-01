@@ -1,10 +1,10 @@
-package com.epam.song.domain;
+package com.epam.resource.domain;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "songs")
