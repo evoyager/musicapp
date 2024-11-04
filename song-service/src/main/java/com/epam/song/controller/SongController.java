@@ -3,10 +3,11 @@ package com.epam.song.controller;
 import com.epam.song.domain.Song;
 import com.epam.song.exceptions.ResourceNotFoundException;
 import com.epam.song.service.SongService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,12 +20,15 @@ public class SongController {
     @Autowired
     private SongService songService;
 
+    Logger logger = LoggerFactory.getLogger(SongController.class);
+
     @PostMapping
     public ResponseEntity<?> createSong(@RequestBody Song song) {
         try {
             Song savedSong = songService.saveSong(song);
             return ResponseEntity.ok(Map.of("id", savedSong.getId()));
         } catch (Exception e) {
+            logger.atError().log(e.getMessage());
             return ResponseEntity.internalServerError().body("Error saving song: " + e.getMessage());
         }
     }
@@ -35,8 +39,10 @@ public class SongController {
             Song song = songService.getSongById(id);
             return ResponseEntity.ok(song);
         } catch (ResourceNotFoundException e) {
+            logger.atError().log(e.getMessage());
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
+            logger.atError().log(e.getMessage());
             return ResponseEntity.internalServerError().body("Error retrieving song: " + e.getMessage());
         }
     }
@@ -51,8 +57,10 @@ public class SongController {
             songService.deleteSongs(idList);
             return ResponseEntity.ok(Map.of("deletedIds", idList));
         } catch (NumberFormatException e) {
+            logger.atError().log(e.getMessage());
             return ResponseEntity.badRequest().body("Invalid IDs format");
         } catch (Exception e) {
+            logger.atError().log(e.getMessage());
             return ResponseEntity.internalServerError().body("Error deleting songs: " + e.getMessage());
         }
     }
@@ -63,6 +71,7 @@ public class SongController {
             List<Song> songs = songService.getAllSongs();
             return ResponseEntity.ok(songs);
         } catch (Exception e) {
+            logger.atError().log(e.getMessage());
             return ResponseEntity.internalServerError().body(List.of());
         }
     }

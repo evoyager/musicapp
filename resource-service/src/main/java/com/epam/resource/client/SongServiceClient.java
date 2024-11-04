@@ -13,9 +13,6 @@ public class SongServiceClient {
 
     private final RestTemplate restTemplate;
 
-    // Assume URL is configured in application properties
-    private final String songServiceUrl = "http://localhost:8081/songs";
-
     @Autowired
     public SongServiceClient(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
@@ -29,6 +26,8 @@ public class SongServiceClient {
                 .length("Length")
                 .resourceId(resourceId)
                 .build();
+        // Assume URL is configured in application properties
+        String songServiceUrl = "http://song-service:8081/songs";
         restTemplate.postForObject(songServiceUrl, song, Song.class);
     }
 }
