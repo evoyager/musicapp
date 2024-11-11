@@ -20,10 +20,11 @@ public class SongServiceClient {
 
     public void createSongMetadata(Map<String, String> metadata, Long resourceId) {
         Song song = Song.builder()
-                .name(metadata.get("Name"))
-                .artist(metadata.get("Artist"))
-                .album(metadata.get("Album"))
-                .length("Length")
+                .name(metadata.get("title"))
+                .artist(metadata.get("Author"))
+                .album(metadata.get("xmpDM:album"))
+                .length(metadata.get("xmpDM:duration"))
+                .year(metadata.get("xmpDM:releaseDate"))
                 .resourceId(resourceId)
                 .build();
         // Assume URL is configured in application properties
