@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -23,10 +22,10 @@ public class ResourceController {
 
     Logger logger = LoggerFactory.getLogger(ResourceController.class);
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> uploadResource(@RequestParam("file") MultipartFile file) {
+    @PostMapping(consumes = "audio/mpeg")
+    public ResponseEntity<?> uploadResource(@RequestBody byte[] audioData) {
         try {
-            Resource resource = resourceService.saveResource(file);
+            Resource resource = resourceService.saveResource(audioData);
             return ResponseEntity.ok(Map.of("id", resource.getId()));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());

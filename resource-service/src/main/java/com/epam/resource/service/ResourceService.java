@@ -34,13 +34,13 @@ public class ResourceService {
 
     Logger logger = LoggerFactory.getLogger(ResourceService.class);
 
-    public Resource saveResource(MultipartFile file) throws Exception {
+    public Resource saveResource(byte[] audioData) throws Exception {
         Resource resource = new Resource();
-        resource.setData(file.getBytes());
+        resource.setData(audioData);
         resource = resourceRepository.save(resource);
 
         // Assuming Apache Tika is used here to extract metadata
-        Map<String, String> metadata = extractMetadata(file.getBytes());
+        Map<String, String> metadata = extractMetadata(audioData);
 
         // Send metadata to Song Service
         songServiceClient.createSongMetadata(metadata, resource.getId());
