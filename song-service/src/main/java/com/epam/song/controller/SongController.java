@@ -15,6 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static com.epam.song.converter.SongConverter.toDto;
+import static com.epam.song.converter.SongConverter.toEntity;
+
 @RestController
 @RequestMapping("/songs")
 public class SongController {
@@ -25,40 +28,33 @@ public class SongController {
     Logger logger = LoggerFactory.getLogger(SongController.class);
 
     @PostMapping
-    public ResponseEntity<?> createSong(@RequestBody @Valid SongMetadataDto songMetadata) {
+    public ResponseEntity<Map<String, Long>> createSong(@RequestBody @Valid SongMetadataDto songMetadata) throws Exception {
         try {
-            Song song = new Song();
-            song.setId(songMetadata.getId());
-            song.setName(songMetadata.getName());
-            song.setArtist(songMetadata.getArtist());
-            song.setAlbum(songMetadata.getAlbum());
-            song.setLength(songMetadata.getLength());
-            song.setYear(songMetadata.getYear());
-            song.setResourceId(songMetadata.getResourceId());
+            Song song = toEntity(songMetadata);
             Song savedSong = songService.saveSong(song);
             return ResponseEntity.ok(Map.of("id", savedSong.getId()));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
-            return ResponseEntity.internalServerError().body("Error saving song: " + e.getMessage());
+            throw new Exception("Error saving song: " + e.getMessage(), e);
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getSongById(@PathVariable Long id) {
+    public ResponseEntity<SongMetadataDto> getSongById(@PathVariable Long id) throws Exception {
         try {
             Song song = songService.getSongById(id);
-            return ResponseEntity.ok(song);
+            return ResponseEntity.ok(toDto(song));
         } catch (ResourceNotFoundException e) {
             logger.atError().log(e.getMessage());
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
-            return ResponseEntity.internalServerError().body("Error retrieving song: " + e.getMessage());
+            throw new Exception("Error retrieving song: " + e.getMessage(), e);
         }
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteSongs(@RequestParam String ids) {
+    public ResponseEntity<Map<String, List<Long>>> deleteSongs(@RequestParam String ids) throws Exception {
         try {
             List<Long> idList = Arrays.stream(ids.split(","))
                     .map(String::trim)
@@ -68,10 +64,10 @@ public class SongController {
             return ResponseEntity.ok(Map.of("deletedIds", idList));
         } catch (NumberFormatException e) {
             logger.atError().log(e.getMessage());
-            return ResponseEntity.badRequest().body("Invalid IDs format");
+            throw new NumberFormatException("Invalid IDs format");
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
-            return ResponseEntity.internalServerError().body("Error deleting songs: " + e.getMessage());
+            throw new Exception("Error deleting songs: " + e.getMessage(), e);
         }
     }
 
