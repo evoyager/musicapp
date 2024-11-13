@@ -23,13 +23,13 @@ public class ResourceController {
     Logger logger = LoggerFactory.getLogger(ResourceController.class);
 
     @PostMapping(consumes = "audio/mpeg")
-    public ResponseEntity<?> uploadResource(@RequestBody byte[] audioData) {
+    public ResponseEntity<?> uploadResource(@RequestBody byte[] audioData) throws Exception {
         try {
             Resource resource = resourceService.saveResource(audioData);
             return ResponseEntity.ok(Map.of("id", resource.getId()));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
-            return ResponseEntity.internalServerError().build();
+            throw e;
         }
     }
 
