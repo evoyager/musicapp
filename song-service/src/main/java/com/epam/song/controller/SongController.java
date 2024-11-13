@@ -1,8 +1,10 @@
 package com.epam.song.controller;
 
 import com.epam.song.domain.Song;
+import com.epam.song.domain.SongMetadataDto;
 import com.epam.song.exceptions.ResourceNotFoundException;
 import com.epam.song.service.SongService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,16 @@ public class SongController {
     Logger logger = LoggerFactory.getLogger(SongController.class);
 
     @PostMapping
-    public ResponseEntity<?> createSong(@RequestBody Song song) {
+    public ResponseEntity<?> createSong(@RequestBody @Valid SongMetadataDto songMetadata) {
         try {
+            Song song = new Song();
+            song.setId(songMetadata.getId());
+            song.setName(songMetadata.getName());
+            song.setArtist(songMetadata.getArtist());
+            song.setAlbum(songMetadata.getAlbum());
+            song.setLength(songMetadata.getLength());
+            song.setYear(songMetadata.getYear());
+            song.setResourceId(songMetadata.getResourceId());
             Song savedSong = songService.saveSong(song);
             return ResponseEntity.ok(Map.of("id", savedSong.getId()));
         } catch (Exception e) {

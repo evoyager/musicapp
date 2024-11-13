@@ -1,0 +1,62 @@
+package com.epam.resource.exceptions;
+
+import jakarta.ws.rs.BadRequestException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.context.request.WebRequest;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+
+@Slf4j
+@RestControllerAdvice
+public class ServiceExceptionHandler {
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage badRequestException(BadRequestException ex, WebRequest request) {
+        log.error("400 Status Code", ex);
+        List<String> message = new ArrayList<String>();
+        message.add("Invalid audio data.");
+        return new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                message,
+                request.getDescription(false));
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    @ResponseStatus(value = HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    public ErrorMessage unsupportedMediaTypeException(HttpMediaTypeNotSupportedException ex, WebRequest request) {
+        log.error("415 Status Code", ex);
+        List<String> message = new ArrayList<String>();
+        message.add("Invalid media type.");
+        return new ErrorMessage(
+                HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+                new Date(),
+                message,
+                request.getDescription(false));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> badRequestException(MethodArgumentNotValidException ex, WebRequest request) {
+        log.error("400 Status Code", ex);
+        ErrorMessage error = new ErrorMessage();
+
+        List<String> collect = ex.getBindingResult().getFieldErrors().stream().filter(Objects::nonNull)
+                .map(m -> (m.getField() + " " + m.getDefaultMessage())).toList();
+        List<String> message = new ArrayList<String>(collect);
+        error.setMessage(message);
+        return new ResponseEntity<Object>(error, HttpStatus.BAD_REQUEST);
+    }
+}
