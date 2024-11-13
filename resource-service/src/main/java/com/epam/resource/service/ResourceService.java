@@ -11,16 +11,20 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ResourceService {
@@ -53,8 +57,23 @@ public class ResourceService {
                 .getData();
     }
 
-    public void deleteResources(List<Long> ids) {
-        resourceRepository.deleteAllById(ids);
+    public List<Long> deleteResources(String id) {
+        if (id.length() > 200) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CSV string is too long: received " + id.length()
+                    + " characters. Maximum allowed length is 200 characters.");
+        }
+
+        List<Long> ids;
+        try {
+            ids = Arrays.stream(id.split(","))
+                    .map(String::trim)
+                    .map(Long::parseLong) // This will throw NumberFormatException for non-numeric values
+                    .collect(Collectors.toList());
+        } catch (NumberFormatException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid ID format. Could not parse all IDs from the CSV string.");
+        }
+        return resourceRepository.deleteAllByIdInReturnIds(ids);
     }
 
     public Map<String, String> extractMetadata(byte[] data) {

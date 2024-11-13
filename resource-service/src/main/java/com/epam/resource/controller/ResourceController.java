@@ -48,10 +48,11 @@ public class ResourceController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Map<String, List<Long>>> deleteResource(@RequestParam List<Long> ids) {
+    public ResponseEntity<Map<String, List<Long>>> deleteResource(@RequestParam String id) {
+        List<Long> deletedIds;
         try {
-            resourceService.deleteResources(ids);
-            return ResponseEntity.ok(Map.of("ids", ids));
+            deletedIds = resourceService.deleteResources(id);
+            return ResponseEntity.ok(Map.of("ids", deletedIds));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
             return ResponseEntity.internalServerError().build();
