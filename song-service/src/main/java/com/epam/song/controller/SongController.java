@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -54,20 +53,14 @@ public class SongController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Map<String, List<Long>>> deleteSongs(@RequestParam String ids) throws Exception {
+    public ResponseEntity<Map<String, List<Long>>> deleteSongs(@RequestParam String ids) {
+        List<Long> deletedIds;
         try {
-            List<Long> idList = Arrays.stream(ids.split(","))
-                    .map(String::trim)
-                    .map(Long::parseLong)
-                    .toList();
-            songService.deleteSongs(idList);
-            return ResponseEntity.ok(Map.of("deletedIds", idList));
-        } catch (NumberFormatException e) {
-            logger.atError().log(e.getMessage());
-            throw new NumberFormatException("Invalid IDs format");
+            deletedIds = songService.deleteSongs(ids);
+            return ResponseEntity.ok(Map.of("deletedIds", deletedIds));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
-            throw new Exception("Error deleting songs: " + e.getMessage(), e);
+            return ResponseEntity.internalServerError().build();
         }
     }
 

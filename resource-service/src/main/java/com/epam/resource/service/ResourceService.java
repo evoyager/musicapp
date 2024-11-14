@@ -37,7 +37,7 @@ public class ResourceService {
 
     Logger logger = LoggerFactory.getLogger(ResourceService.class);
 
-    public Resource saveResource(byte[] audioData) throws Exception {
+    public Resource saveResource(byte[] audioData) {
         Resource resource = new Resource();
         resource.setData(audioData);
         resource = resourceRepository.save(resource);
@@ -57,15 +57,15 @@ public class ResourceService {
                 .getData();
     }
 
-    public List<Long> deleteResources(String id) {
-        if (id.length() > 200) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CSV string is too long: received " + id.length()
+    public List<Long> deleteResources(String ids) {
+        if (ids.length() > 200) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CSV string is too long: received " + ids.length()
                     + " characters. Maximum allowed length is 200 characters.");
         }
 
-        List<Long> ids;
+        List<Long> idList;
         try {
-            ids = Arrays.stream(id.split(","))
+            idList = Arrays.stream(ids.split(","))
                     .map(String::trim)
                     .map(Long::parseLong) // This will throw NumberFormatException for non-numeric values
                     .collect(Collectors.toList());
@@ -73,7 +73,7 @@ public class ResourceService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Invalid ID format. Could not parse all IDs from the CSV string.");
         }
-        return resourceRepository.deleteAllByIdInReturnIds(ids);
+        return resourceRepository.deleteAllByIdInReturnIds(idList);
     }
 
     public Map<String, String> extractMetadata(byte[] data) {

@@ -23,7 +23,7 @@ public class ResourceController {
     Logger logger = LoggerFactory.getLogger(ResourceController.class);
 
     @PostMapping(consumes = "audio/mpeg")
-    public ResponseEntity<Map<String, Long>> uploadResource(@RequestBody byte[] audioData) throws Exception {
+    public ResponseEntity<Map<String, Long>> uploadResource(@RequestBody byte[] audioData) {
         try {
             Resource resource = resourceService.saveResource(audioData);
             return ResponseEntity.ok(Map.of("id", resource.getId()));
@@ -48,11 +48,11 @@ public class ResourceController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Map<String, List<Long>>> deleteResource(@RequestParam String id) {
+    public ResponseEntity<Map<String, List<Long>>> deleteResource(@RequestParam String ids) {
         List<Long> deletedIds;
         try {
-            deletedIds = resourceService.deleteResources(id);
-            return ResponseEntity.ok(Map.of("ids", deletedIds));
+            deletedIds = resourceService.deleteResources(ids);
+            return ResponseEntity.ok(Map.of("deletedIds", deletedIds));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
             return ResponseEntity.internalServerError().build();
