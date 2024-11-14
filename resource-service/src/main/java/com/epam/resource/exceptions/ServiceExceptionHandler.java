@@ -77,4 +77,18 @@ public class ServiceExceptionHandler {
                 message,
                 request.getDescription(false));
     }
+
+    @ExceptionHandler(NumberFormatException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage numberFormatException(NumberFormatException ex, WebRequest request) {
+        log.error("400 Status Code", ex);
+        List<String> message = new ArrayList<>();
+        message.add("Invalid ID format. Could not parse all IDs from the CSV string.");
+
+        return new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                message,
+                request.getDescription(false));
+    }
 }
