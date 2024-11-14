@@ -26,7 +26,7 @@ public class SongController {
 
     Logger logger = LoggerFactory.getLogger(SongController.class);
 
-    @PostMapping
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Map<String, Long>> createSong(@RequestBody @Valid SongMetadataDto songMetadata) throws Exception {
         try {
             Song song = toEntity(songMetadata);
@@ -38,7 +38,7 @@ public class SongController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<SongMetadataDto> getSongById(@PathVariable Long id) throws Exception {
         try {
             Song song = songService.getSongById(id);
@@ -52,7 +52,7 @@ public class SongController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping(produces = "application/json")
     public ResponseEntity<Map<String, List<Long>>> deleteSongs(@RequestParam String ids) {
         List<Long> deletedIds;
         try {
@@ -64,10 +64,10 @@ public class SongController {
         }
     }
 
-    @GetMapping
-    public ResponseEntity<List<Song>> getAllSongs() {
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<List<SongMetadataDto>> getAllSongs() {
         try {
-            List<Song> songs = songService.getAllSongs();
+            List<SongMetadataDto> songs = songService.getAllSongs();
             return ResponseEntity.ok(songs);
         } catch (Exception e) {
             logger.atError().log(e.getMessage());

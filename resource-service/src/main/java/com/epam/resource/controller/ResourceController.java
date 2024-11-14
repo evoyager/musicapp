@@ -22,7 +22,7 @@ public class ResourceController {
 
     Logger logger = LoggerFactory.getLogger(ResourceController.class);
 
-    @PostMapping(consumes = "audio/mpeg")
+    @PostMapping(consumes = "audio/mpeg", produces = "application/json")
     public ResponseEntity<Map<String, Long>> uploadResource(@RequestBody byte[] audioData) {
         try {
             Resource resource = resourceService.saveResource(audioData);
@@ -33,7 +33,7 @@ public class ResourceController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value ="/{id}", produces = "audio/mpeg")
     public ResponseEntity<byte[]> getResource(@PathVariable Long id) {
         try {
             byte[] data = resourceService.getResource(id);
@@ -47,7 +47,7 @@ public class ResourceController {
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping(produces = "application/json")
     public ResponseEntity<Map<String, List<Long>>> deleteResource(@RequestParam String ids) {
         List<Long> deletedIds;
         try {

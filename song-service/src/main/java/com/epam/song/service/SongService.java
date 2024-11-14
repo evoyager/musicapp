@@ -1,6 +1,8 @@
 package com.epam.song.service;
 
+import com.epam.song.converter.SongConverter;
 import com.epam.song.domain.Song;
+import com.epam.song.domain.SongMetadataDto;
 import com.epam.song.exceptions.ResourceNotFoundException;
 import com.epam.song.repository.SongRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ public class SongService {
         try {
             idList = Arrays.stream(ids.split(","))
                     .map(String::trim)
-                    .map(Long::parseLong) // This will throw NumberFormatException for non-numeric values
+                    .map(Long::parseLong)
                     .collect(Collectors.toList());
         } catch (NumberFormatException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -46,7 +48,8 @@ public class SongService {
         return songRepository.deleteAllByIdInReturnIds(idList);
     }
 
-    public List<Song> getAllSongs() {
-        return songRepository.findAll();
+    public List<SongMetadataDto> getAllSongs() {
+        List<Song> songs = songRepository.findAll();
+        return songs.stream().map(SongConverter::toDto).collect(Collectors.toList());
     }
 }
