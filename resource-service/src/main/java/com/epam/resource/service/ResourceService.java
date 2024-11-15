@@ -2,6 +2,7 @@ package com.epam.resource.service;
 
 import com.epam.resource.client.SongServiceClient;
 import com.epam.resource.domain.Resource;
+import com.epam.resource.exceptions.InvalidCsvException;
 import com.epam.resource.exceptions.ResourceNotFoundException;
 import com.epam.resource.repository.ResourceRepository;
 import org.apache.tika.metadata.Metadata;
@@ -11,9 +12,7 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
@@ -59,15 +58,21 @@ public class ResourceService {
 
     public List<Long> deleteResources(String ids) {
         if (ids.length() > 200) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CSV string is too long: received " + ids.length()
+            throw new InvalidCsvException("CSV string is too long: received " + ids.length()
                     + " characters. Maximum allowed length is 200 characters.");
         }
 
         List<Long> idList;
-        idList = Arrays.stream(ids.split(","))
-                .map(String::trim)
-                .map(Long::parseLong) // This will throw NumberFormatException for non-numeric values
-                .collect(Collectors.toList());
+        try {
+            idList = Arrays.stream(ids.split(","))
+                    .map(String::trim)
+                    .map(Long::parseLong) // This will throw NumberFormatException for non-numeric values
+                    .collect(Collectors.toList());
+        } catch (NumberFormatException ex) {
+            throw new InvalidCsvException(
+                    String.format("Invalid ID format %s. Could not parse all IDs from the CSV string.",
+                            ex.getMessage()));
+        }
 
         return resourceRepository.deleteAllByIdInReturnIds(idList);
     }
