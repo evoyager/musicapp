@@ -3,6 +3,7 @@ package com.epam.resource.service;
 import com.epam.resource.client.SongServiceClient;
 import com.epam.resource.domain.Resource;
 import com.epam.resource.exceptions.InvalidCsvException;
+import com.epam.resource.exceptions.InvalidIdException;
 import com.epam.resource.exceptions.ResourceNotFoundException;
 import com.epam.resource.repository.ResourceRepository;
 import org.apache.tika.metadata.Metadata;
@@ -51,6 +52,9 @@ public class ResourceService {
     }
 
     public byte[] getResource(Long id) throws ResourceNotFoundException {
+        if (id <= 0) {
+            throw new InvalidIdException(String.valueOf(id));
+        }
         return resourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found"))
                 .getData();
