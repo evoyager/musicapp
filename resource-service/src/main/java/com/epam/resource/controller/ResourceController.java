@@ -1,7 +1,6 @@
 package com.epam.resource.controller;
 
 import com.epam.resource.domain.Resource;
-import com.epam.resource.exceptions.ResourceNotFoundException;
 import com.epam.resource.service.ResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +37,9 @@ public class ResourceController {
         try {
             byte[] data = resourceService.getResource(id);
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(data);
-        } catch (ResourceNotFoundException ex) {
-            logger.atError().log(ex.getMessage());
-            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
-            return ResponseEntity.internalServerError().build();
+            throw e;
         }
     }
 
@@ -55,7 +51,7 @@ public class ResourceController {
             return ResponseEntity.ok(Map.of("deletedIds", deletedIds));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
-            return ResponseEntity.internalServerError().build();
+            throw e;
         }
     }
 }

@@ -20,6 +20,20 @@ import java.util.Objects;
 @RestControllerAdvice
 public class ServiceExceptionHandler {
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorMessage badRequestException(ResourceNotFoundException ex, WebRequest request) {
+        log.error("404 Status Code", ex);
+        List<String> message = new ArrayList<>();
+        message.add(String.format("Resource not found %s", ex.getMessage()));
+
+        return new ErrorMessage(
+                HttpStatus.NOT_FOUND.value(),
+                new Date(),
+                message,
+                request.getDescription(false));
+    }
+
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage badRequestException(BadRequestException ex, WebRequest request) {
@@ -83,7 +97,7 @@ public class ServiceExceptionHandler {
     public ErrorMessage numberFormatException(NumberFormatException ex, WebRequest request) {
         log.error("400 Status Code", ex);
         List<String> message = new ArrayList<>();
-        message.add("Invalid ID format. Could not parse all IDs from the CSV string.");
+        message.add(String.format("Invalid ID format %s. Could not parse all IDs from the CSV string.", ex.getMessage()));
 
         return new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),

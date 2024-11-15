@@ -64,15 +64,11 @@ public class ResourceService {
         }
 
         List<Long> idList;
-        try {
-            idList = Arrays.stream(ids.split(","))
-                    .map(String::trim)
-                    .map(Long::parseLong) // This will throw NumberFormatException for non-numeric values
-                    .collect(Collectors.toList());
-        } catch (NumberFormatException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Invalid ID format. Could not parse all IDs from the CSV string.");
-        }
+        idList = Arrays.stream(ids.split(","))
+                .map(String::trim)
+                .map(Long::parseLong) // This will throw NumberFormatException for non-numeric values
+                .collect(Collectors.toList());
+
         return resourceRepository.deleteAllByIdInReturnIds(idList);
     }
 
