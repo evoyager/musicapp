@@ -1,15 +1,18 @@
 package com.epam.resource.repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
-public class ResourceRepositoryImpl implements CustomResourceRepository {
+public class CustomResourceRepositoryImpl implements CustomResourceRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
+    @Transactional
     public List<Long> deleteAllByIdInReturnIds(List<Long> ids) {
         // Check which IDs exist
         List<Long> existingIds = entityManager.createQuery(

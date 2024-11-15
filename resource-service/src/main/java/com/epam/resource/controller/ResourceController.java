@@ -47,8 +47,8 @@ public class ResourceController {
         }
     }
 
-    @DeleteMapping(value ="/id={ids}", produces = "application/json")
-    public ResponseEntity<Map<String, List<Long>>> deleteResource(@RequestParam String ids) {
+    @DeleteMapping(produces = "application/json")
+    public ResponseEntity<Map<String, List<Long>>> deleteResource(@RequestParam(value ="id") String ids) {
         List<Long> deletedIds;
         try {
             deletedIds = resourceService.deleteResources(ids);
