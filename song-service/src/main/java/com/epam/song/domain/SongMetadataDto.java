@@ -25,7 +25,7 @@ public class SongMetadataDto {
 
     private String duration;
 
-    @Pattern(regexp = "^(19|20)\\d{2}$", message = "Year must be in YYYY format and between 1900 and 2099.")
+    @Pattern(regexp = "^(19|20)\\d{2}$", message = "must be in YYYY format and between 1900 and 2099.")
     private String year;
 
     private Long resourceId;

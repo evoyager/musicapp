@@ -1,13 +1,26 @@
 package com.epam.song.repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import com.epam.song.exceptions.SongIdExistsException;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import java.util.List;
 
-public class SongRepositoryImpl implements CustomSongRepository {
+public class CustomSongRepositoryImpl implements CustomSongRepository {
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Override
+    public void checkSongIdExists(Long id) {
+        String query = "SELECT COUNT(s) FROM Song s WHERE s.id = :id";
+        Long count = entityManager.createQuery(query, Long.class)
+                .setParameter("id", id)
+                .getSingleResult();
+        if (count > 0) {
+            throw new SongIdExistsException("Song with ID " + id + " already exists.");
+        }
+    }
 
     @Override
     public List<Long> deleteAllByIdInReturnIds(List<Long> ids) {

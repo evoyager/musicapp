@@ -21,6 +21,9 @@ public class SongService {
     private SongRepository songRepository;
 
     public Song saveSong(Song song) {
+        if (song.getId() != null) {
+            songRepository.checkSongIdExists(song.getId());
+        }
         return songRepository.save(song);
     }
 
