@@ -1,6 +1,7 @@
 package com.epam.song.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +32,7 @@ public class Song {
     private String duration;
 
     @Column(name = "year", nullable = true)
+    @Pattern(regexp = "^(19|20)\\d{2}$", message = "Year must be in YYYY format and between 1900 and 2099.")
     private String year;
 
     @Column(name = "resource_id")
