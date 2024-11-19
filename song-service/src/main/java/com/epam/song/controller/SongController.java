@@ -45,7 +45,7 @@ public class SongController {
             return ResponseEntity.ok(toDto(song));
         } catch (ResourceNotFoundException e) {
             logger.atError().log(e.getMessage());
-            return ResponseEntity.notFound().build();
+            throw e;
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
             throw new Exception("Error retrieving song: " + e.getMessage(), e);

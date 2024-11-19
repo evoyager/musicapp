@@ -29,7 +29,7 @@ public class SongService {
 
     public Song getSongById(Long id) throws ResourceNotFoundException {
         return songRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Song not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Song not found with ID: " + id));
     }
 
     public List<Long> deleteSongs(String ids) {

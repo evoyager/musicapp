@@ -61,4 +61,18 @@ public class ServiceExceptionHandler {
                 request.getDescription(false));
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorMessage resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
+        log.error("404 Status Code", ex);
+        List<String> message = new ArrayList<>();
+        message.add(ex.getMessage());
+
+        return new ErrorMessage(
+                HttpStatus.NOT_FOUND.value(),
+                new Date(),
+                message,
+                request.getDescription(false));
+    }
+
 }
