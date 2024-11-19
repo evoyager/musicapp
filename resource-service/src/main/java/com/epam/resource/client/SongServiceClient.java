@@ -19,16 +19,32 @@ public class SongServiceClient {
     }
 
     public void createSongMetadata(Map<String, String> metadata, Long resourceId) {
+        String rawDuration = metadata.get("xmpDM:duration");
+        String formattedDuration = formatDuration(rawDuration);
         Song song = Song.builder()
                 .name(metadata.get("title"))
                 .artist(metadata.get("Author"))
                 .album(metadata.get("xmpDM:album"))
-                .length(metadata.get("xmpDM:duration"))
+                .duration(formattedDuration)
                 .year(metadata.get("xmpDM:releaseDate"))
                 .resourceId(resourceId)
                 .build();
-        // Assume URL is configured in application properties
         String songServiceUrl = "http://song-service:8081/songs";
         restTemplate.postForObject(songServiceUrl, song, Song.class);
+    }
+
+    private String formatDuration(String rawDuration) {
+        if (rawDuration == null) return "00:00";
+
+        try {
+            // assuming the raw duration is in seconds with possible decimal points, e.g., 179.38
+            long seconds = Long.parseLong(rawDuration.split("\\.")[0]);
+            long minutes = seconds / 60;
+            seconds = seconds % 60;
+
+            return String.format("%02d:%02d", minutes, seconds);
+        } catch (NumberFormatException e) {
+            return "00:00";
+        }
     }
 }

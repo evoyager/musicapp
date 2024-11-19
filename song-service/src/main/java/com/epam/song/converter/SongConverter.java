@@ -20,7 +20,7 @@ public class SongConverter {
                 .name(dto.getName())
                 .artist(dto.getArtist())
                 .album(dto.getAlbum())
-                .length(dto.getLength())
+                .duration(dto.getDuration())
                 .year(dto.getYear())
                 .resourceId(dto.getResourceId())
                 .build();
@@ -41,7 +41,7 @@ public class SongConverter {
                 entity.getName(),
                 entity.getArtist(),
                 entity.getAlbum(),
-                entity.getLength(),
+                entity.getDuration(),
                 entity.getYear(),
                 entity.getResourceId()
         );

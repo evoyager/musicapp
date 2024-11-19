@@ -27,10 +27,10 @@ public class Song {
     @Column(name = "album")
     private String album;
 
-    @Column(name = "length")
-    private String length;
+    @Column(name = "duration")
+    private String duration;
 
-    @Column(name = "year", nullable = true) // This can be nullable as per business requirement
+    @Column(name = "year", nullable = true)
     private String year;
 
     @Column(name = "resource_id")
