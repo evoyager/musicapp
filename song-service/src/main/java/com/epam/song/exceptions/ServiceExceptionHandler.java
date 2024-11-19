@@ -1,6 +1,7 @@
 package com.epam.song.exceptions;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,7 +12,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -22,14 +23,14 @@ public class ServiceExceptionHandler {
     public ErrorMessage methodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest request) {
         log.error("400 Status Code", ex);
 
-        List<String> collect = ex.getBindingResult().getFieldErrors().stream().filter(Objects::nonNull)
-                .map(m -> (m.getField() + " " + m.getDefaultMessage())).toList();
-        List<String> message = new ArrayList<>(collect);
+        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
 
         return new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 new Date(),
-                message,
+                errors,
                 request.getDescription(false));
     }
 
