@@ -75,4 +75,18 @@ public class ServiceExceptionHandler {
                 request.getDescription(false));
     }
 
+    @ExceptionHandler(InvalidCsvException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage invalidCsvException(InvalidCsvException ex, WebRequest request) {
+        log.error("400 Status Code", ex);
+        List<String> message = new ArrayList<>();
+        message.add(ex.getMessage());
+
+        return new ErrorMessage(
+                HttpStatus.BAD_REQUEST.value(),
+                new Date(),
+                message,
+                request.getDescription(false));
+    }
+
 }

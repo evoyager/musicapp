@@ -53,14 +53,14 @@ public class SongController {
     }
 
     @DeleteMapping(produces = "application/json")
-    public ResponseEntity<Map<String, List<Long>>> deleteSongs(@RequestParam String ids) {
+    public ResponseEntity<Map<String, List<Long>>> deleteSongs(@RequestParam(value ="id") String ids) {
         List<Long> deletedIds;
         try {
             deletedIds = songService.deleteSongs(ids);
             return ResponseEntity.ok(Map.of("deletedIds", deletedIds));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
-            return ResponseEntity.internalServerError().build();
+            throw e;
         }
     }
 

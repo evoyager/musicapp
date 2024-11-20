@@ -123,7 +123,7 @@ public class ServiceExceptionHandler {
 
     @ExceptionHandler(InvalidCsvException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorMessage numberFormatException(InvalidCsvException ex, WebRequest request) {
+    public ErrorMessage invalidCsvException(InvalidCsvException ex, WebRequest request) {
         log.error("400 Status Code", ex);
         List<String> message = new ArrayList<>();
         message.add(ex.getMessage());
