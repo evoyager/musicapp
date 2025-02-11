@@ -17,7 +17,7 @@ in resource-service/src/main/resources/application.properties:
 spring.datasource.url=jdbc:postgresql://localhost:5432/music
 
 in resource-service/src/main/java/com/epam/resource/client/SongServiceClient.java:
-String songServiceUrl = "http://song-service:8081/songs";
+String songServiceUrl = "http://localhost:8081/songs";
 
 in: song-service/src/main/resources/application.properties:
 spring.datasource.url=jdbc:postgresql://localhost:5432/music
@@ -29,7 +29,7 @@ in resource-service/src/main/resources/application.properties:
 spring.datasource.url=jdbc:postgresql://db:5432/postgres
 
 in resource-service/src/main/java/com/epam/resource/client/SongServiceClient.java:
-String songServiceUrl = "http://db:8081/songs";
+String songServiceUrl = "http://song-service:8081/songs";
 
 in: song-service/src/main/resources/application.properties:
 spring.datasource.url=jdbc:postgresql://db:5432/postgres

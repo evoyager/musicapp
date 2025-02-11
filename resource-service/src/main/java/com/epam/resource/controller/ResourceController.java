@@ -36,7 +36,7 @@ public class ResourceController {
     public ResponseEntity<byte[]> getResource(@PathVariable Long id) {
         try {
             byte[] data = resourceService.getResource(id);
-            return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(data);
+            return ResponseEntity.ok().contentType(MediaType.parseMediaType("audio/mpeg")).body(data);
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
             throw e;
