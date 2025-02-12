@@ -18,16 +18,16 @@ public class SongServiceClient {
         this.restTemplate = restTemplateBuilder.build();
     }
 
-    public void createSongMetadata(Map<String, String> metadata, Long resourceId) {
+    public void createSongMetadata(Map<String, String> metadata, Long id) {
         String rawDuration = metadata.get("xmpDM:duration");
         String formattedDuration = formatDuration(rawDuration);
         Song song = Song.builder()
+                .id(id)
                 .name(metadata.get("title"))
                 .artist(metadata.get("Author"))
                 .album(metadata.get("xmpDM:album"))
                 .duration(formattedDuration)
                 .year(metadata.get("xmpDM:releaseDate"))
-                .resourceId(resourceId)
                 .build();
         String songServiceUrl = "http://song-service:8081/songs";
         restTemplate.postForObject(songServiceUrl, song, Song.class);

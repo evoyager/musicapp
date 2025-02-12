@@ -57,7 +57,7 @@ public class SongController {
         List<Long> deletedIds;
         try {
             deletedIds = songService.deleteSongs(ids);
-            return ResponseEntity.ok(Map.of("deletedIds", deletedIds));
+            return ResponseEntity.ok(Map.of("ids", deletedIds));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
             throw e;

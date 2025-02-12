@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Song {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
@@ -31,7 +30,4 @@ public class Song {
 
     @Column(name = "year", nullable = true) // This can be nullable as per business requirement
     private String year;
-
-    @Column(name = "resource_id")
-    private Long resourceId;
 }

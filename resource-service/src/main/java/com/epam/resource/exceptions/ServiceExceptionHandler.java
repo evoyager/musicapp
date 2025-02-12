@@ -29,7 +29,7 @@ public class ServiceExceptionHandler {
         message.add(String.format("Invalid format of ID: %s", ex.getValue()));
 
         return new ErrorMessage(
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 new Date(),
                 message,
                 request.getDescription(false));
@@ -78,14 +78,14 @@ public class ServiceExceptionHandler {
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    @ResponseStatus(value = HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorMessage unsupportedMediaTypeException(HttpMediaTypeNotSupportedException ex, WebRequest request) {
-        log.error("415 Status Code", ex);
+        log.error("400 Status Code", ex);
         List<String> message = new ArrayList<>();
         message.add("Invalid media type.");
 
         return new ErrorMessage(
-                HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 new Date(),
                 message,
                 request.getDescription(false));

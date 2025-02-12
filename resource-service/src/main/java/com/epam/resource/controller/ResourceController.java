@@ -48,7 +48,7 @@ public class ResourceController {
         List<Long> deletedIds;
         try {
             deletedIds = resourceService.deleteResources(ids);
-            return ResponseEntity.ok(Map.of("deletedIds", deletedIds));
+            return ResponseEntity.ok(Map.of("ids", deletedIds));
         } catch (Exception e) {
             logger.atError().log(e.getMessage());
             throw e;

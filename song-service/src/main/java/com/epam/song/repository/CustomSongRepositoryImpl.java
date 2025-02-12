@@ -5,6 +5,8 @@ import com.epam.song.exceptions.SongIdExistsException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 public class CustomSongRepositoryImpl implements CustomSongRepository {
@@ -23,6 +25,7 @@ public class CustomSongRepositoryImpl implements CustomSongRepository {
     }
 
     @Override
+    @Transactional
     public List<Long> deleteAllByIdInReturnIds(List<Long> ids) {
         // Check which IDs exist
         List<Long> existingIds = entityManager.createQuery(

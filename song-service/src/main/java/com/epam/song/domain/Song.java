@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Song {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
@@ -34,7 +33,4 @@ public class Song {
     @Column(name = "year", nullable = true)
     @Pattern(regexp = "^(19|20)\\d{2}$", message = "Year must be in YYYY format and between 1900 and 2099.")
     private String year;
-
-    @Column(name = "resource_id")
-    private Long resourceId;
 }
