@@ -78,7 +78,11 @@ public class ResourceService {
                             ex.getMessage()));
         }
 
-        return resourceRepository.deleteAllByIdInReturnIds(idList);
+        List<Long> deletedIds = resourceRepository.deleteAllByIdInReturnIds(idList);
+        if (!deletedIds.isEmpty()) {
+            songServiceClient.deleteSongs(ids);
+        }
+        return deletedIds;
     }
 
     public Map<String, String> extractMetadata(byte[] data) {

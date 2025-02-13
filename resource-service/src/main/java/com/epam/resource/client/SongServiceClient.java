@@ -12,6 +12,7 @@ import java.util.Map;
 public class SongServiceClient {
 
     private final RestTemplate restTemplate;
+    private final String SONG_SERVICE_URL = "http://localhost:8081/songs";
 
     @Autowired
     public SongServiceClient(RestTemplateBuilder restTemplateBuilder) {
@@ -29,8 +30,12 @@ public class SongServiceClient {
                 .duration(formattedDuration)
                 .year(metadata.get("xmpDM:releaseDate"))
                 .build();
-        String songServiceUrl = "http://song-service:8081/songs";
-        restTemplate.postForObject(songServiceUrl, song, Song.class);
+
+        restTemplate.postForObject(SONG_SERVICE_URL, song, Song.class);
+    }
+
+    public void deleteSongs(String ids) {
+        restTemplate.delete(SONG_SERVICE_URL + "?id=" + ids);
     }
 
     private String formatDuration(String rawDuration) {

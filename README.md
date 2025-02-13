@@ -14,13 +14,15 @@ If Auto DevOps is not already enabled for this project, you can [turn it on](htt
 
 Set those values:
 in resource-service/src/main/resources/application.properties:
-spring.datasource.url=jdbc:postgresql://localhost:5432/music
+spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+spring.datasource.username=postgres
 
 in resource-service/src/main/java/com/epam/resource/client/SongServiceClient.java:
 String songServiceUrl = "http://localhost:8081/songs";
 
 in: song-service/src/main/resources/application.properties:
-spring.datasource.url=jdbc:postgresql://localhost:5432/music
+spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+spring.datasource.username=postgres
 
 ### Run in Docker
 
