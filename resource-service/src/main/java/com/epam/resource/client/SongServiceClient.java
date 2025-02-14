@@ -1,6 +1,6 @@
 package com.epam.resource.client;
 
-import com.epam.resource.domain.Song;
+import com.epam.resource.domain.SongMetadataDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class SongServiceClient {
     public void createSongMetadata(Map<String, String> metadata, Long id) {
         String rawDuration = metadata.get("xmpDM:duration");
         String formattedDuration = formatDuration(rawDuration);
-        Song song = Song.builder()
+        SongMetadataDto song = SongMetadataDto.builder()
                 .id(id)
                 .name(metadata.get("title"))
                 .artist(metadata.get("Author"))
@@ -31,7 +31,7 @@ public class SongServiceClient {
                 .year(metadata.get("xmpDM:releaseDate"))
                 .build();
 
-        restTemplate.postForObject(SONG_SERVICE_URL, song, Song.class);
+        restTemplate.postForObject(SONG_SERVICE_URL, song, SongMetadataDto.class);
     }
 
     public void deleteSongs(String ids) {
