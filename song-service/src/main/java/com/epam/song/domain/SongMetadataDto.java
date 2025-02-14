@@ -23,6 +23,7 @@ public class SongMetadataDto {
 
     private String album;
 
+    @Pattern(regexp = "^\\d{2}:[0-5][0-9]$", message = "must be in the mm:ss format, where mm is positive and ss is between 00 and 59")
     private String duration;
 
     @Pattern(regexp = "^(19|20)\\d{2}$", message = "must be in YYYY format and between 1900 and 2099.")
