@@ -7,6 +7,8 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"  # Maps container port 5432 to host port 5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   song-db:
     image: postgres:17-alpine
@@ -16,3 +18,26 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5433:5432"  # Maps container port 5432 to host port 5433 (to avoid conflict)
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  resource-service:
+    build:
+      context: ./resource-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - resource-db
+
+  song-service:
+      build:
+        context: ./song-service
+        dockerfile: Dockerfile
+      ports:
+        - "8081:8081"
+      depends_on:
+        - song-db
+
+volumes:
+  pgdata:

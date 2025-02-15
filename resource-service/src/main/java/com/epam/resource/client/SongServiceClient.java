@@ -12,7 +12,7 @@ import java.util.Map;
 public class SongServiceClient {
 
     private final RestTemplate restTemplate;
-    private final String SONG_SERVICE_URL = "http://localhost:8081/songs";
+    private final String SONG_SERVICE_URL = "http://song-service:8081/songs";
 
     @Autowired
     public SongServiceClient(RestTemplateBuilder restTemplateBuilder) {
