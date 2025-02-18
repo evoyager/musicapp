@@ -14,14 +14,13 @@ public class SongServiceClient {
 
     private final RestTemplate restTemplate;
 
-    @Value("${song.service.host}")
-    private String SONG_SERVICE_HOST;
-
-    private final String SONG_SERVICE_URL = "http://" + SONG_SERVICE_HOST + ":8081/songs";
+    private final String SONG_SERVICE_URL;
 
     @Autowired
-    public SongServiceClient(RestTemplateBuilder restTemplateBuilder) {
+    public SongServiceClient(RestTemplateBuilder restTemplateBuilder,
+                             @Value("${song.service.host}") String songServiceHost) {
         this.restTemplate = restTemplateBuilder.build();
+        SONG_SERVICE_URL = "http://" + songServiceHost + ":8081/songs";
     }
 
     public void createSongMetadata(Map<String, String> metadata, Long id) {
