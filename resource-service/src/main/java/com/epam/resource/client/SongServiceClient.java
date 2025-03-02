@@ -2,6 +2,7 @@ package com.epam.resource.client;
 
 import com.epam.resource.domain.SongMetadataDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -12,11 +13,14 @@ import java.util.Map;
 public class SongServiceClient {
 
     private final RestTemplate restTemplate;
-    private final String SONG_SERVICE_URL = "http://localhost:8081/songs";
+
+    private final String SONG_SERVICE_URL;
 
     @Autowired
-    public SongServiceClient(RestTemplateBuilder restTemplateBuilder) {
+    public SongServiceClient(RestTemplateBuilder restTemplateBuilder,
+                             @Value("${song.service.host}") String songServiceHost) {
         this.restTemplate = restTemplateBuilder.build();
+        SONG_SERVICE_URL = "http://" + songServiceHost + ":8081/songs";
     }
 
     public void createSongMetadata(Map<String, String> metadata, Long id) {

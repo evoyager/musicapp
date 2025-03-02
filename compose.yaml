@@ -1,18 +1,53 @@
 services:
   resource-db:
     image: postgres:17-alpine
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: resource-db
-      POSTGRES_USER: postgres  # Default, can be omitted if unchanged
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_RESOURCE_DB}
+      POSTGRES_USER: ${POSTGRES_USER}  # Default, can be omitted if unchanged
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./init-scripts/resource-db:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"  # Maps container port 5432 to host port 5432
 
   song-db:
     image: postgres:17-alpine
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: song-db
-      POSTGRES_USER: postgres  # Default, can be omitted if unchanged
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${POSTGRES_SONG_DB}
+      POSTGRES_USER: ${POSTGRES_USER}  # Default, can be omitted if unchanged
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./init-scripts/song-db:/docker-entrypoint-initdb.d
     ports:
       - "5433:5432"  # Maps container port 5432 to host port 5433 (to avoid conflict)
+
+  resource-service:
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: ${RESOURCE_DB_URL}
+      SONG_SERVICE_HOST: ${SONG_SERVICE_HOST}
+    build:
+      context: ./resource-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - resource-db
+
+  song-service:
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: ${SONG_DB_URL}
+    build:
+      context: ./song-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - song-db
