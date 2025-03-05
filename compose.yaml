@@ -31,6 +31,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: ${RESOURCE_DB_URL}
       SONG_SERVICE_HOST: ${SONG_SERVICE_HOST}
+      EUREKA_HOST: ${EUREKA_HOST}
     build:
       context: ./resource-service
       dockerfile: Dockerfile
@@ -38,16 +39,29 @@ services:
       - "8080:8080"
     depends_on:
       - resource-db
+      - eureka-service
 
   song-service:
     env_file:
       - .env
     environment:
       SPRING_DATASOURCE_URL: ${SONG_DB_URL}
+      EUREKA_HOST: ${EUREKA_HOST}
     build:
       context: ./song-service
       dockerfile: Dockerfile
+    deploy:
+      replicas: 2
     ports:
-      - "8081:8081"
+      - "8082-8083:8081"
     depends_on:
       - song-db
+      - eureka-service
+
+  eureka-service:
+    container_name: eureka-service
+    build:
+      context: ./eureka-service
+      dockerfile: Dockerfile
+    ports:
+      - "8761:8761"
